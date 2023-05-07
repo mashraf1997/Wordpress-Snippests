@@ -15,6 +15,6 @@ add_filter( 'woocommerce_order_button_html', 'replace_order_button_html', 10, 2 
 function replace_order_button_html( $order_button ) {
     if( WC()->cart->total > val() ) return $order_button;
     $order_button_text = __( "لم يتم الوصول لأقل تلكفة للطلب", "woocommerce" );
-    $style = ' style="color:#fff;cursor:not-allowed;background-color:#999;"';
+    $style = ' style="color:#fff;pointer-events: none;cursor:not-allowed;background-color:#999;"';
     return '<a class="button alt"'.$style.' name="woocommerce_checkout_place_order" id="place_order" >' . esc_html( $order_button_text ) . '</a>';
 }
