@@ -1,0 +1,27 @@
+// Function to hide a specific button when the URL contains the '?join=' parameter
+function hide_button_on_join_parameter() {
+    // Check if the URL contains the '?join=' parameter
+    if (strpos($_SERVER['REQUEST_URI'], '?join=') !== false) {
+        // Output inline CSS to hide the button using nth-child(1)
+        echo "
+        <style>
+        /* Hide the first button inside the 'participants-footer-bottom' container */
+        .participants-section-container__participants-footer-bottom button:nth-child(1) {
+            display: none !important;
+        }
+        </style>
+
+        <script>
+        // JavaScript to ensure the button is hidden after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use a timeout of 1000ms (1 second) to hide the button (extra precaution for slow loading)
+            setTimeout(function() {
+                document.querySelector('.participants-section-container__participants-footer-bottom button:nth-child(1)').style.display = 'none';
+            }, 1000);
+        });
+        </script>
+        ";
+    }
+}
+// Hook the function to the 'wp_head' action so it runs when the <head> section of the page is rendered
+add_action('wp_head', 'hide_button_on_join_parameter');
