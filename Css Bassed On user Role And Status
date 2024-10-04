@@ -1,0 +1,23 @@
+function add_user_role_body_class($classes) {
+    // Check if the user is logged in
+    if (is_user_logged_in()) {
+        $user = wp_get_current_user();
+        $roles = $user->roles;
+
+        // Add the 'logged-in' class for logged-in users
+        $classes[] = 'logged-in';
+
+        // Add the role in the format 'user-role-<role>'
+        if (!empty($roles) && is_array($roles)) {
+            foreach ($roles as $role) {
+                $classes[] = 'user-role-' . $role;
+            }
+        }
+    } else {
+        // If the user is not logged in, add 'logged-out' class
+        $classes[] = 'logged-out';
+    }
+
+    return $classes;
+}
+add_filter('body_class', 'add_user_role_body_class');
