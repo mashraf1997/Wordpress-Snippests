@@ -1,26 +1,29 @@
-Allow Some Pages To Be Publicly Accessible On Wordpress While Using Force Login | Download From : https://wordpress.org/plugins/wp-force-login/
+<?php
+/**
+ * Allow specific pages to stay public while using WP Force Login
+ *
+ * Bypasses the forced login for the listed page IDs, and points the plugin's
+ * login URL at a custom sign-in page.
+ *
+ * Requires: WP Force Login — https://wordpress.org/plugins/wp-force-login/
+ * Usage: replace the page IDs and the login URL with your own.
+ *
+ * @package mashraf1997/wordpress-snippets
+ */
+
+defined( 'ABSPATH' ) || exit;
+
 function my_forcelogin_bypass( $bypass, $visited_url ) {
-  if ( is_page(316) ) {
-    $bypass = true;
-  }
-  if ( is_page(313) ) {
-    $bypass = true;
-  }
-  if ( is_page(840) ) {
-    $bypass = true;
-  }
-	if ( is_page(3) ) {
-    $bypass = true;
-  }
-  if ( is_page(965) ) {
-    $bypass = true;
-  }
-  return $bypass;
+    $public_pages = array( 316, 313, 840, 3, 965 );
+    if ( is_page( $public_pages ) ) {
+        $bypass = true;
+    }
+    return $bypass;
 }
 add_filter( 'v_forcelogin_bypass', 'my_forcelogin_bypass', 10, 2 );
 
-//Change The Login Page To Custom Page
+// Change the login page to a custom page.
 function my_login_page() {
-    return "https://alborhimy.com/ar/signin/";
+    return 'https://example.com/signin/';
 }
 add_filter( 'login_url', 'my_login_page', 10, 2 );
