@@ -1,36 +1,52 @@
-//Add Woocommerce Actions Sound Effects
-//Sound On Quantity Minus, Plus And Add To Cart 
-function effect() {?>
+<?php
+/**
+ * Add WooCommerce Actions Sound Effects
+ *
+ * Plays a short sound on quantity minus/plus and add-to-cart, and another
+ * sound when an order is placed (order-received page).
+ *
+ * Usage: add to your theme's functions.php or a site-specific plugin, and
+ * replace the audio URLs with your own uploaded files.
+ *
+ * @package mashraf1997/wordpress-snippets
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+// Sound on quantity minus, plus and add to cart.
+function effect() { ?>
     <script type="text/javascript">
-        $(document).ready(function() {
+        // WordPress ships jQuery in noConflict mode, so alias $ locally.
+        jQuery(function ($) {
+            var audio  = new Audio('https://example.com/wp-content/uploads/minus.mp3');
+            var audio2 = new Audio('https://example.com/wp-content/uploads/plus.mp3');
 
-          var audio  = new Audio('https://alborhimy.com/wp-content/uploads/2023/02/WhatsApp-Audio-2023-02-21-at-08.57.13-High-quality.mp3');
-          var audio2 = new Audio('https://alborhimy.com/wp-content/uploads/2023/02/WhatsApp-Audio-2023-02-21-at-08.56.55-High-quality.mp3')
+            $(".plus, .add_to_cart_button").mousedown(function () {
+                audio2.load();
+                audio2.play();
+            });
 
-          $(".plus,.add_to_cart_button").mousedown(function() {
-            audio2.load();
-            audio2.play();
-          });
-
-          $(".minus").mouseup(function() {
-            audio.load();
-            audio.play();
-          });
+            $(".minus").mouseup(function () {
+                audio.load();
+                audio.play();
+            });
         });
     </script>
 <?php
 }
-add_action('wp_head','effect');
+add_action( 'wp_head', 'effect' );
 
-//Sound On Order Placed
+// Sound on order placed.
 function ordersound() {
-if ( is_checkout() && !empty( is_wc_endpoint_url('order-received') ) ) {?>
+    if ( is_checkout() && is_wc_endpoint_url( 'order-received' ) ) { ?>
     <script type="text/javascript">
-        $(window ).load(function() {
-        var audio2 = new Audio('https://alborhimy.com/wp-content/uploads/2023/02/WhatsApp-Audio-2023-02-21-at-08.57.27-High-quality.mp3')
-        audio2.load();
-        audio2.play();});	
+        jQuery(window).on('load', function () {
+            var audio2 = new Audio('https://example.com/wp-content/uploads/order.mp3');
+            audio2.load();
+            audio2.play();
+        });
     </script>
 <?php
-}}
-add_action('wp_head','ordersound');
+    }
+}
+add_action( 'wp_head', 'ordersound' );

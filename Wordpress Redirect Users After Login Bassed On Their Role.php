@@ -1,36 +1,34 @@
-//Wordpress Redirect Users After Login Bassed On Their Role
-//Custom Redirect After Login
+<?php
+/**
+ * Redirect users after login based on their role (WooCommerce)
+ *
+ * Administrators go to the dashboard; everyone else goes to the home page.
+ * Adjust the branches to send each role wherever you like.
+ *
+ * @package mashraf1997/wordpress-snippets
+ */
 
-function wc_custom_user_redirect() {
-  // Get the first of all the roles assigned to the user
-  $role = $user->roles[0];
-  $dashboard = get_dashboard_url;
-  $home = get_home_url();
-  if( $role == 'administrator' ) {
-    //Redirect administrators to the dashboard
-    $redirect = $dashboard;
-  } 
-  elseif ( $role == 'shop-manager' ) {
-    //Redirect shop managers to the dashboard
-    $redirect = $home;
-  } 
-  elseif ( $role == 'editor' ) {
-    //Redirect editors to the dashboard
-    $redirect = $home;
-  } 
-  elseif ( $role == 'author' ) {
-    //Redirect authors to the dashboard
-    $redirect = $home;
-  } 
-  elseif ( $role == 'customer' || $role == 'subscriber' ) {
-    //Redirect customers and subscribers to the "My Account" page
-    $redirect = $home; 
-  }
-   
-  else {
-    //Redirect any other role to the home
-    $redirect = $home; 
-  }
-  return $redirect;
+defined( 'ABSPATH' ) || exit;
+
+function wc_custom_user_redirect( $redirect, $user ) {
+    // WooCommerce passes the logged-in user to this filter.
+    $role = ! empty( $user->roles ) ? $user->roles[0] : '';
+    $home = get_home_url();
+
+    switch ( $role ) {
+        case 'administrator':
+            $redirect = get_dashboard_url( $user->ID );
+            break;
+        case 'shop-manager':
+        case 'editor':
+        case 'author':
+        case 'customer':
+        case 'subscriber':
+        default:
+            $redirect = $home;
+            break;
+    }
+
+    return $redirect;
 }
-add_filter( 'woocommerce_login_redirect', 'wc_custom_user_redirect', 10, 2 ); 
+add_filter( 'woocommerce_login_redirect', 'wc_custom_user_redirect', 10, 2 );
